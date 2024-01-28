@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
-{   
+public class Enemy : MonoBehaviour
+{
     public enum State
     {
         Idle,
@@ -20,27 +20,17 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        //swordScript = sword.GetComponent<Sword>();
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if(sword == null)
-        {
-            Debug.LogError("Sword reference lost at runtime");
-        }
         switch (currentState)
         {
             case State.Idle:
                 break;
             case State.Blocking:
-                if (Input.GetKey(KeyCode.Space))
-                {
-                    Debug.Log(sword.transform.position);
-                    sword.GetComponent<Sword>().Rotate(new Vector3(0,0,-30)* Time.deltaTime);
-                }
                 break;
             case State.Attacking:
                 break;
