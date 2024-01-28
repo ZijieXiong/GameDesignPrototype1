@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
         // Initialize player's state to match the GameManager's state.
         if (gameManager != null)
         {
-            ChangeState(gameManager.CurrentState);
+            //ChangeState(gameManager.CurrentState);
         }
     }
 
