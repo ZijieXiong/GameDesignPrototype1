@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {   
@@ -16,14 +18,22 @@ public class GameManager : MonoBehaviour
         Loading,
         Failing
     }
-    // Prefabs for different signals in the game.
+    // Prefabs for object instantiation.
     public GameObject circlePrefab;
     public GameObject squarePrefab;
     public GameObject trianglePrefab;
+    public GameObject heartPrefab;
+
     // Reference to the player object in the game.
     public Player player;
     // GameObject to hold all signal objects.
     public GameObject signals;
+
+    //Gameobjects to hold UI elements
+    public GameObject startText;
+    public GameObject failText;
+
+    public Canvas canvas;
 
     // Array for storing a series of shape indices.
     private int[] serie;
@@ -32,6 +42,8 @@ public class GameManager : MonoBehaviour
 
     // Variable to track the current state of the game.
     private State currentState;
+
+    private int playerHealth = 3;
 
     // Variables for calculating and storing camera bounds.
     private Vector2 cameraTopLeft;
@@ -44,7 +56,10 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {   
+        startText.SetActive(true);
         ChangeState(State.Idle);
+        failText.SetActive(false);
+        UpdateHealthUI();
     }
 
     // Update is called once per frame
@@ -56,7 +71,7 @@ public class GameManager : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     ChangeState(State.Blocking);
-                    player.ChangeState(Player.State.Blocking);
+                    startText.SetActive(false);
                 }
                 break;
             case State.Blocking:
@@ -66,12 +81,19 @@ public class GameManager : MonoBehaviour
                         signalObjects.RemoveAt(i);
                     }
                 }
+                if(playerHealth == 0){
+                    ChangeState(State.Failing);
+                }
                 break;
             case State.Attacking:
                 break;
             case State.Loading:
                 break;
             case State.Failing:
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    ChangeState(State.Blocking);
+                }
                 break;
         }
     }
@@ -92,7 +114,7 @@ public class GameManager : MonoBehaviour
     // Returns the index of the shape (0 for circle, 1 for square, 2 for triangle).
     private int SpawnRandomShape()
     {
-        int shapeIndex = Random.Range(0, 3);
+        int shapeIndex = UnityEngine.Random.Range(0, 3);
         return shapeIndex;
     }
 
@@ -117,6 +139,27 @@ public class GameManager : MonoBehaviour
             signalObjects.Add(signal);
         }
     }
+
+    //Update number of heart in UI based on player's health
+    public void UpdateHealthUI()
+    {
+        foreach (Transform child in canvas.transform)
+        {
+            if (child.gameObject.CompareTag("HeartUI"))
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        for (int i = 0; i < playerHealth; i++)
+        {
+            GameObject heart = Instantiate(heartPrefab, canvas.transform);
+            heart.tag = "HeartUI";
+
+            RectTransform rect = heart.GetComponent<RectTransform>();
+            rect.anchoredPosition = new Vector2(-330 + (rect.sizeDelta.x /2 * i), 200);
+        }
+    }
+
 
     // Calculates the bounds of the camera view in world space.
     // Useful for positioning objects within the camera's view.
@@ -159,6 +202,7 @@ public class GameManager : MonoBehaviour
             case State.Idle:
                 break;
             case State.Blocking:
+                player.ChangeState(Player.State.Blocking);
                 serie = GenerateSerie(3);
                 Debug.Log("Attacking Serie");
                 //signals = new GameObject("Signals");
@@ -174,6 +218,7 @@ public class GameManager : MonoBehaviour
             case State.Loading:
                 break;
             case State.Failing:
+            failText.SetActive(true);
                 break;
         }
     }
