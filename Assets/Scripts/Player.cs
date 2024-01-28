@@ -38,7 +38,6 @@ public class Player : MonoBehaviour
             case State.Blocking:
                 if (Input.GetKey(KeyCode.Space))
                 {
-                    Debug.Log(sword.transform.position);
                     sword.GetComponent<Sword>().Rotate(new Vector3(0,0,-30)* Time.deltaTime);
                 }
                 break;

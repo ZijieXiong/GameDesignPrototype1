@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class Sword : MonoBehaviour
 {   
-    GameObject rotationAxis;
+    public GameObject owner;
+
+    private GameObject rotationAxis;
+
     // Start is called before the first frame update
     void Start()
-    {   
-        Debug.Log("Start");
+    {
         rotationAxis = new GameObject("RotationAxis");
 
         rotationAxis.transform.position = transform.position;
@@ -16,8 +18,8 @@ public class Sword : MonoBehaviour
         float height = GetComponent<SpriteRenderer>().bounds.size.y;
 
         rotationAxis.transform.position -= new Vector3(0, height / 2, 0);
-        rotationAxis.transform.SetParent(GameObject.Find("player").transform);
-        if (rotationAxis.transform.parent == GameObject.Find("player").transform)
+        rotationAxis.transform.SetParent(owner.transform);
+        if (rotationAxis.transform.parent == owner.transform)
         {
             Debug.Log("RotationAxis is successfully set as a child of player.");
         }
