@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {   
+    // Define the possible states of the player.
     public enum State
     {
         Idle,
@@ -13,9 +14,11 @@ public class Player : MonoBehaviour
         Failing
     }
 
+    // Public variable for the sword game object.
     public GameObject sword;
+    // Private variable to keep track of the player's current state.
     private State currentState = State.Idle;
-
+    // Private reference to the Sword script component.
     private Sword swordScript;
     // Start is called before the first frame update
     void Start()
@@ -36,6 +39,7 @@ public class Player : MonoBehaviour
             case State.Idle:
                 break;
             case State.Blocking:
+                // When in the Blocking state, rotate the sword if the space key is held down.
                 if (Input.GetKey(KeyCode.Space))
                 {
                     sword.GetComponent<Sword>().Rotate(new Vector3(0,0,-30)* Time.deltaTime);
@@ -49,7 +53,7 @@ public class Player : MonoBehaviour
                 break;
         }
     }
-
+    // Change the current state of the player and perform necessary setup for each state.
     public void ChangeState(State newState)
     {
         currentState = newState;

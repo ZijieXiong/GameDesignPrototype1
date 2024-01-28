@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {   
+    // Enumeration defining possible game states.
     public enum State
     {
         Idle,
@@ -15,16 +16,24 @@ public class GameManager : MonoBehaviour
         Loading,
         Failing
     }
+    // Prefabs for different signals in the game.
     public GameObject circlePrefab;
     public GameObject squarePrefab;
     public GameObject trianglePrefab;
+    // Reference to the player object in the game.
     public Player player;
+    // GameObject to hold all signal objects.
+    public GameObject signals;
 
+    // Array for storing a series of shape indices.
     private int[] serie;
+    // List of game objects representing signals in the game.
     private List<GameObject> signalObjects = new List<GameObject>();
-    private State currentState;
-    private GameObject signals;
 
+    // Variable to track the current state of the game.
+    private State currentState;
+
+    // Variables for calculating and storing camera bounds.
     private Vector2 cameraTopLeft;
     private Vector2 cameraTopRight;
     private Vector2 cameraBottomLeft;
@@ -67,6 +76,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Generates an array of integers representing a random series of shapes.
+    // The length of the series is specified by the 'length' parameter.
     private int[] GenerateSerie(int length)
     {
         int[] res = new int[length];
@@ -77,12 +88,16 @@ public class GameManager : MonoBehaviour
         return res;
     }
 
+    // Selects a random shape by generating a random index.
+    // Returns the index of the shape (0 for circle, 1 for square, 2 for triangle).
     private int SpawnRandomShape()
     {
         int shapeIndex = Random.Range(0, 3);
         return shapeIndex;
     }
 
+    // Initializes a signal game object based on the shape index and position.
+    // The shape index determines which prefab to instantiate (circle, square, triangle).
     private void InitSignal(int shapeIndex, Vector3 position)
     {
         GameObject signal = null;
@@ -98,13 +113,13 @@ public class GameManager : MonoBehaviour
                 signal = Instantiate(trianglePrefab, position, Quaternion.identity, signals.transform);
                 break;
         }
-        signalObjects.Add(signal);
-        /*
         if(signal){
-            signal.transform.SetParent(signals.transform);
-        }*/
+            signalObjects.Add(signal);
+        }
     }
 
+    // Calculates the bounds of the camera view in world space.
+    // Useful for positioning objects within the camera's view.
      void CalculateCameraBounds()
     {
         Camera cam = Camera.main; // 获取主摄像机
@@ -133,6 +148,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Changes the current state of the game.
+    // Handles actions to be taken during state transitions, like generating attack series or setting up game objects.
     private void ChangeState(State newState)
     {
         currentState = newState;
@@ -144,7 +161,7 @@ public class GameManager : MonoBehaviour
             case State.Blocking:
                 serie = GenerateSerie(3);
                 Debug.Log("Attacking Serie");
-                signals = new GameObject("Signals");
+                //signals = new GameObject("Signals");
                 CalculateCameraBounds();
                 for (int i = 0; i < serie.Length; i++)
                 {

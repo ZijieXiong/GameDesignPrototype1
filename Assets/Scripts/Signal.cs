@@ -21,34 +21,4 @@ public class Signal : MonoBehaviour
     {
         transform.Translate(new Vector3(-5,0,0) * Time.deltaTime);
     }
-
-
-
-    void CalculateCameraBounds()
-    {
-        Camera cam = Camera.main; // 获取主摄像机
-        if (cam == null) 
-        {
-            Debug.LogError("Main Camera is not assigned.");
-            return;
-        }
-        
-        if (cam.orthographic)
-        {
-            cameraHeight = cam.orthographicSize * 2;
-            cameraWidth = cameraHeight * cam.aspect; 
-
-            cameraBottomLeft = new Vector2(cam.transform.position.x - cameraWidth / 2, cam.transform.position.y - cam.orthographicSize);
-            cameraTopRight = new Vector2(cam.transform.position.x + cameraWidth / 2, cam.transform.position.y + cam.orthographicSize);
-
-            cameraTopLeft = new Vector2(cameraBottomLeft.x, cameraTopRight.y);
-            cameraBottomRight = new Vector2(cameraTopRight.x, cameraBottomLeft.y);
-            
-            Debug.Log($"Camera Bounds:\nTop Left: {cameraTopLeft}\nTop Right: {cameraTopRight}\nBottom Left: {cameraBottomLeft}\nBottom Right: {cameraBottomRight}");
-        }
-        else
-        {
-            Debug.LogError("Camera is not orthographic.");
-        }
-    }
 }

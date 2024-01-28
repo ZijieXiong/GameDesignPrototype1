@@ -670,6 +670,37 @@ Transform:
   - {fileID: 403721305}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1576801084
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1576801085}
+  m_Layer: 0
+  m_Name: signals
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1576801085
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576801084}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.5915558, y: 3.0904217, z: -0.16956884}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1628687856
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,8 +795,8 @@ MonoBehaviour:
   circlePrefab: {fileID: 2160741909648266533, guid: 4453e3d69ee599442aec2ef6e8c4e458, type: 3}
   squarePrefab: {fileID: 1134538529938035762, guid: 4d29ddbd720c7bc4c923b9aa03c73038, type: 3}
   trianglePrefab: {fileID: 3286758540661107903, guid: 561d4226dc2364142b79880fc13d01d0, type: 3}
-  camera: {fileID: 519420028}
   player: {fileID: 1572038573}
+  signals: {fileID: 1576801084}
 --- !u!212 &3678983644688910935
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -894,3 +925,4 @@ SceneRoots:
   - {fileID: 1651334235}
   - {fileID: 1572038574}
   - {fileID: 1628687858}
+  - {fileID: 1576801085}
