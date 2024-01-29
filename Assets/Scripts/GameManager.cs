@@ -29,11 +29,15 @@ public class GameManager : MonoBehaviour
     // GameObject to hold all signal objects.
     public GameObject signals;
 
+    public GameObject frame;
+    public Sprite[] frameShapes;
     //Gameobjects to hold UI elements
     public GameObject startText;
     public GameObject failText;
 
     public Canvas canvas;
+
+    public float acceptableDistance = 0.5f;
 
     // Array for storing a series of shape indices.
     private int[] serie;
@@ -52,7 +56,7 @@ public class GameManager : MonoBehaviour
     private Vector2 cameraBottomRight;
     private float cameraHeight;
     private float cameraWidth;
-
+    private int currentSignal = 0;
     // Start is called before the first frame update
     void Start()
     {   
@@ -60,6 +64,7 @@ public class GameManager : MonoBehaviour
         ChangeState(State.Idle);
         failText.SetActive(false);
         UpdateHealthUI();
+        frame.SetActive(false);
     }
 
     // Update is called once per frame
@@ -72,6 +77,7 @@ public class GameManager : MonoBehaviour
                 {
                     ChangeState(State.Blocking);
                     startText.SetActive(false);
+                    frame.SetActive(true);
                 }
                 break;
             case State.Blocking:
@@ -81,8 +87,48 @@ public class GameManager : MonoBehaviour
                         signalObjects.RemoveAt(i);
                     }
                 }
+                //Player input timing detection
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) < acceptableDistance)
+                    {
+                        Debug.Log("Block Success");
+                        player.ChangeState(Player.State.BlockSuccess);
+                    }
+                    else
+                    {
+                        Debug.Log(signalObjects[currentSignal]);
+                        playerHealth-=1;
+                        UpdateHealthUI();
+                        player.ChangeState(Player.State.BlockFail);                        
+                    }
+                    currentSignal += 1;
+                    if(currentSignal < serie.Length){
+                        ChangeFrameShape(serie[currentSignal]);
+                    }
+                }
+                else{
+                    //Check if player miss one signal
+                    if(frame.transform.position.x - signalObjects[currentSignal].transform.position.x > acceptableDistance * 2){
+                        playerHealth-=1;
+                        UpdateHealthUI();
+                        currentSignal += 1;
+                        if(currentSignal < serie.Length){
+                            ChangeFrameShape(serie[currentSignal]);
+                        }
+                        player.ChangeState(Player.State.BlockFail);
+                    }
+                }
+
+                //Check if player loss all health
                 if(playerHealth == 0){
                     ChangeState(State.Failing);
+                }
+                else{
+                    //Check if player block all attacks
+                    if(currentSignal >= serie.Length){
+                        ChangeState(State.Attacking);
+                    }
                 }
                 break;
             case State.Attacking:
@@ -90,8 +136,9 @@ public class GameManager : MonoBehaviour
             case State.Loading:
                 break;
             case State.Failing:
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyUp(KeyCode.Space))
                 {
+                    failText.SetActive(false);
                     ChangeState(State.Blocking);
                 }
                 break;
@@ -105,6 +152,7 @@ public class GameManager : MonoBehaviour
         int[] res = new int[length];
         for (int i = 0; i < length; i++){
             res[i] = SpawnRandomShape();
+            Debug.Log(res[i]);
         }
 
         return res;
@@ -191,11 +239,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void ChangeFrameShape(int shapeIndex)
+    {
+        if (shapeIndex >= 0 && shapeIndex < frameShapes.Length)
+        {
+            frame.GetComponent<SpriteRenderer>().sprite = frameShapes[shapeIndex];
+        }
+    }
+
     // Changes the current state of the game.
     // Handles actions to be taken during state transitions, like generating attack series or setting up game objects.
     private void ChangeState(State newState)
     {
         currentState = newState;
+        Debug.Log(currentState);
 
         switch (newState)
         {
@@ -204,21 +261,33 @@ public class GameManager : MonoBehaviour
             case State.Blocking:
                 player.ChangeState(Player.State.Blocking);
                 serie = GenerateSerie(3);
+                currentSignal = 0;
+                playerHealth = 3;
                 Debug.Log("Attacking Serie");
+                signalObjects = new List<GameObject>();
                 //signals = new GameObject("Signals");
                 CalculateCameraBounds();
                 for (int i = 0; i < serie.Length; i++)
                 {
                     Debug.Log(serie[i]);
-                    InitSignal(serie[i], new Vector3(cameraWidth / 2 + 2 * (i) + 1,2.8f,0));
+                    InitSignal(serie[i], new Vector3(cameraWidth / 2 + 4 * (i) + 1,2.8f,0));
                 }
+                UpdateHealthUI();
+                ChangeFrameShape(serie[0]);
+
                 break;
             case State.Attacking:
                 break;
             case State.Loading:
                 break;
             case State.Failing:
-            failText.SetActive(true);
+                int numOfSignal = signalObjects.Count;
+                for(int i = 0; i < numOfSignal; i++){
+                    Debug.Log("Destroying");
+                    Destroy(signalObjects[0]);
+                    signalObjects.RemoveAt(0);
+                }
+                failText.SetActive(true);
                 break;
         }
     }

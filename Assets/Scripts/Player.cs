@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     {
         Idle,
         Blocking,
+        BlockSuccess,
+        BlockFail,
         Attacking,
         Loading,
         Failing
@@ -53,6 +55,10 @@ public class Player : MonoBehaviour
                 break;
             case State.Blocking:
                 // Logic for when the player is in the Blocking state.
+                break;
+            case State.BlockSuccess:
+                break;
+            case State.BlockFail:
                 break;
             case State.Attacking:
                 // Logic for when the player is in the Attacking state.
