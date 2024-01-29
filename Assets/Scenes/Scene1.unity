@@ -1094,6 +1094,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sword: {fileID: 403721304}
+  gameManager: {fileID: 0}
 --- !u!4 &1572038574
 Transform:
   m_ObjectHideFlags: 0
@@ -1189,6 +1190,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sword: {fileID: 0}
+  currentState: 0
+  swordScript: {fileID: 0}
 --- !u!1 &1651334233
 GameObject:
   m_ObjectHideFlags: 0
