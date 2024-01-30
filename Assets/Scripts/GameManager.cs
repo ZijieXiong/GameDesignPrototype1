@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
     private float cameraHeight;
     private float cameraWidth;
     private int currentSignal = 0;
+    private int currentHit = 0;
     // Start is called before the first frame update
     void Start()
     {   
@@ -258,22 +259,84 @@ public class GameManager : MonoBehaviour
         {
             if(Input.GetKey(KeyCode.Space))
             {
-                /*if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position)  > acceptableDistance + frame.GetComponent<SpriteRenderer>().)
+                if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) > acceptableDistance + frame.GetComponent<SpriteRenderer>().sprite.rect.width/2)
                 {
                     Debug.Log("Block Fail");
-                }*/
+                    Debug.Log(signalObjects[currentSignal]);
+                    playerHealth-=1;
+                    UpdateHealthUI();
+                    currentSignal += 1;
+                    if(currentSignal < serie.Length){
+                        ChangeFrameShape(serie[currentSignal]);
+                    }
+                }
             }
             else
             {
-
+                if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) <=frame.GetComponent<SpriteRenderer>().sprite.rect.width/2 - acceptableDistance)
+                {
+                    Debug.Log("Block Fail");
+                    Debug.Log(signalObjects[currentSignal]);
+                    playerHealth-=1;
+                    UpdateHealthUI();
+                    currentSignal += 1;
+                    if(currentSignal < serie.Length){
+                        ChangeFrameShape(serie[currentSignal]);
+                    }
+                }
             }
         }
         else if(serie[currentSignal] == 2)
         {
-
+            if(Input.GetKeyDown(KeyCode.Space))
+            {
+                if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) > acceptableDistance + frame.GetComponent<SpriteRenderer>().sprite.rect.width/2)
+                {   
+                    if(currentHit < 2){
+                        currentHit += 1;
+                    }
+                    else if(currentHit >= 2){
+                        Debug.Log("Block Success");
+                        Debug.Log(signalObjects[currentSignal]);
+                        currentSignal += 1;
+                        if(currentSignal < serie.Length){
+                            ChangeFrameShape(serie[currentSignal]);
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.Log("Block Fail");
+                    Debug.Log(signalObjects[currentSignal]);
+                    playerHealth-=1;
+                    UpdateHealthUI();
+                    currentHit = 0;
+                    currentSignal += 1;
+                    if(currentSignal < serie.Length){
+                        ChangeFrameShape(serie[currentSignal]);
+                    }
+                }
+            }
+            else
+            {   
+                if(frame.transform.position.x - signalObjects[currentSignal].transform.position.x > acceptableDistance + frame.GetComponent<SpriteRenderer>().sprite.rect.width/2){
+                    playerHealth-=1;
+                    UpdateHealthUI();
+                    currentHit = 0;
+                    currentSignal += 1;
+                    if(currentSignal < serie.Length){
+                        ChangeFrameShape(serie[currentSignal]);
+                    }
+                }
+            }
         }
 
 
+    }
+
+    public int GetCurrentSerie()
+    {
+        return serie[currentSignal];
     }
 
     // Changes the current state of the game.
