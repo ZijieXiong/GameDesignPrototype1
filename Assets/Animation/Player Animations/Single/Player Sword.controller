@@ -60,7 +60,25 @@ AnimatorController:
   m_PrefabAsset: {fileID: 0}
   m_Name: Player Sword
   serializedVersion: 5
-  m_AnimatorParameters: []
+  m_AnimatorParameters:
+  - m_Name: Player Attack
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: New Bool 0
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: New Bool 1
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -85,16 +103,16 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 7426700768730791103}
-    m_Position: {x: 200, y: 0, z: 0}
+    m_Position: {x: 250, y: 120, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8949726182885348597}
-    m_Position: {x: 235, y: 65, z: 0}
+    m_Position: {x: 540, y: 60, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3698224996623920721}
-    m_Position: {x: 270, y: 130, z: 0}
+    m_Position: {x: 540, y: 150, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6314961610976478283}
-    m_Position: {x: 305, y: 195, z: 0}
+    m_Position: {x: 540, y: 240, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
