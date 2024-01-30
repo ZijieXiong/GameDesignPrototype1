@@ -2,16 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAttackingContorl : StateMachineBehaviour
+public class PlayerDoubleController : StateMachineBehaviour
 {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.SetBool("Player Clash Single", false);
-        animator.SetBool("Player Double", false);
-        animator.SetBool("Player Hold", false);
-        animator.SetBool("Player Attack", false);
-        animator.SetBool("Player Hurt", false);
+        animator.SetBool("Player Double", false);    
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

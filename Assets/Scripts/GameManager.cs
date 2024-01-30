@@ -34,7 +34,6 @@ public class GameManager : MonoBehaviour
     //Gameobjects to hold UI elements
     public GameObject startText;
     public GameObject failText;
-    public StateManager stateManager;
     public Canvas canvas;
 
     public Animator playerAnimator;
@@ -235,12 +234,16 @@ public class GameManager : MonoBehaviour
                     Debug.Log("Block Success");
                     playerAnimator.SetBool("Player Clash Single", true);
                     playerAnimator.SetBool("Player Attack", true);
+                    enemyAnimator.SetBool("Single Bool", true);
+                    enemyAnimator.SetBool("Hurt Bool", true);
                 }
                 else
                 {
                     Debug.Log("Block Fail");
                     playerAnimator.SetBool("Player Clash Single", true);
                     playerAnimator.SetBool("Player Hurt", true);
+                    enemyAnimator.SetBool("Single Bool", true);
+                    enemyAnimator.SetBool("Attack Bool", true);
                     Debug.Log(signalObjects[currentSignal]);
                     playerHealth-=1;
                     UpdateHealthUI();                     
@@ -256,6 +259,8 @@ public class GameManager : MonoBehaviour
                     Debug.Log("Block Fail");
                     playerAnimator.SetBool("Player Clash Single", true);
                     playerAnimator.SetBool("Player Hurt", true);
+                    enemyAnimator.SetBool("Single Bool", true);
+                    enemyAnimator.SetBool("Attack Bool", true);
                     playerHealth-=1;
                     UpdateHealthUI();
                     currentSignal += 1;
@@ -276,6 +281,8 @@ public class GameManager : MonoBehaviour
                     Debug.Log(signalObjects[currentSignal]);
                     playerAnimator.SetBool("Player Hold", true);
                     playerAnimator.SetBool("Player Hurt", true);
+                    enemyAnimator.SetBool("Hold Bool", true);
+                    enemyAnimator.SetBool("Attack Bool", true);
                     playerHealth-=1;
                     UpdateHealthUI();
                     currentSignal += 1;
@@ -295,6 +302,8 @@ public class GameManager : MonoBehaviour
                     Debug.Log(signalObjects[currentSignal]);
                     playerAnimator.SetBool("Player Hold", true);
                     playerAnimator.SetBool("Player Hurt", true);
+                    enemyAnimator.SetBool("Hold Bool", true);
+                    enemyAnimator.SetBool("Attack Bool", true);
                     playerHealth-=1;
                     UpdateHealthUI();
                     currentSignal += 1;
@@ -309,6 +318,8 @@ public class GameManager : MonoBehaviour
                     Debug.Log(signalObjects[currentSignal]);
                     playerAnimator.SetBool("Player Hold", true);
                     playerAnimator.SetBool("Player Attack", true);
+                    enemyAnimator.SetBool("Hold Bool", true);
+                    enemyAnimator.SetBool("Hurt Bool", true);
                     currentSignal += 1;
                     if(currentSignal < serie.Length){
                         ChangeFrameShape(serie[currentSignal]);
@@ -322,6 +333,8 @@ public class GameManager : MonoBehaviour
                 Debug.Log(signalObjects[currentSignal]);
                 playerAnimator.SetBool("Player Hold", true);
                 playerAnimator.SetBool("Player Hurt", true);
+                enemyAnimator.SetBool("Hold Bool", true);
+                enemyAnimator.SetBool("Attack Bool", true);
                 playerHealth-=1;
                 UpdateHealthUI();
                 currentSignal += 1;
@@ -345,6 +358,8 @@ public class GameManager : MonoBehaviour
                         Debug.Log(signalObjects[currentSignal]);
                         playerAnimator.SetBool("Player Double", true);
                         playerAnimator.SetBool("Player Attack", true);
+                        enemyAnimator.SetBool("Double Bool", true);
+                        enemyAnimator.SetBool("Hurt Bool", true);
                         currentSignal += 1;
                         if(currentSignal < serie.Length){
                             ChangeFrameShape(serie[currentSignal]);
@@ -358,6 +373,8 @@ public class GameManager : MonoBehaviour
                     Debug.Log(signalObjects[currentSignal]);
                     playerAnimator.SetBool("Player Double", true);
                     playerAnimator.SetBool("Player Hurt", true);
+                    enemyAnimator.SetBool("Double Bool", true);
+                    enemyAnimator.SetBool("Attack Bool", true);
                     playerHealth-=1;
                     UpdateHealthUI();
                     currentHit = 0;
@@ -374,6 +391,8 @@ public class GameManager : MonoBehaviour
                     Debug.Log(signalObjects[currentSignal]);
                     playerAnimator.SetBool("Player Double", true);
                     playerAnimator.SetBool("Player Hurt", true);
+                    enemyAnimator.SetBool("Double Bool", true);
+                    enemyAnimator.SetBool("Attack Bool", true);
                     playerHealth-=1;
                     UpdateHealthUI();
                     currentHit = 0;
