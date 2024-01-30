@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerAttackState : GameState
 {
@@ -28,16 +29,10 @@ public class PlayerAttackState : GameState
 
     private IEnumerator AttackSequence()
     {
-        
         playerAnimator.Play("Player Attack");
-
-        // Wait for half a second
         yield return new WaitForSeconds(0.5f);
-
-        // Play "Enemy Hurt" animation
         enemyAnimator.Play("Enemy Hurt");
 
-        // Play "Enemy Health" animations based on the attackCounter
         if (attackCounter == 1)
         {
             enemyAnimator.Play("Enemy Health 1");

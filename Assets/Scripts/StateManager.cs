@@ -7,64 +7,22 @@ public abstract class GameState
     public abstract void UpdateState(StateManager manager);
 }
 
-public class PlayerAttackState : GameState
-{
-    public override void EnterState(StateManager manager)
-    {
-        Debug.Log("Entering Player Attack State");
-    }
-
-    public override void ExitState(StateManager manager)
-    {
-        Debug.Log("Exiting Player Attack State");
-    }
-
-    public override void UpdateState(StateManager manager)
-    {
-    }
-}
-
-public class EnemyAttackState : GameState
-{
-    public override void EnterState(StateManager manager)
-    {
-        Debug.Log("Entering Enemy Attack State");
-    }
-
-    public override void ExitState(StateManager manager)
-    {
-        Debug.Log("Exiting Enemy Attack State");
-    }
-
-    public override void UpdateState(StateManager manager)
-    {
-    }
-}
-
-public class ClashState : GameState
-{
-    public override void EnterState(StateManager manager)
-    {
-        Debug.Log("Entering Clash State");
-    }
-
-    public override void ExitState(StateManager manager)
-    {
-        Debug.Log("Exiting Clash State");
-    }
-
-    public override void UpdateState(StateManager manager)
-    {
-    }
-}
-
 public class StateManager : MonoBehaviour
 {
     private GameState currentState;
+    private Animator playerAnimator;
+    private Animator enemyAnimator;
 
     void Start()
     {
-        TransitionToState(new PlayerAttackState());
+        playerAnimator = GameObject.Find("Player Body").GetComponent<Animator>();
+        enemyAnimator = GameObject.Find("Enemy Body").GetComponent<Animator>();
+        if (playerAnimator == null || enemyAnimator == null)
+        {
+            Debug.LogError("Animator references not set in StateManager");
+            return;
+        }
+        TransitionToState(new PlayerAttackState(playerAnimator, enemyAnimator));
     }
 
     public void TransitionToState(GameState newState)
@@ -84,13 +42,13 @@ public class StateManager : MonoBehaviour
         switch (signal)
         {
             case "playerAttack":
-                TransitionToState(new PlayerAttackState());
+                TransitionToState(new PlayerAttackState(playerAnimator, enemyAnimator));
                 break;
             case "enemyAttack":
-                TransitionToState(new EnemyAttackState());
+                TransitionToState(new EnemyAttackState(playerAnimator, enemyAnimator));
                 break;
             case "clash":
-                TransitionToState(new ClashState());
+                TransitionToState(new ClashState(playerAnimator, enemyAnimator));
                 break;
             default:
                 Debug.LogError("Unknown signal received");
