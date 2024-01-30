@@ -15,14 +15,14 @@ public class StateManager : MonoBehaviour
 
     void Start()
     {
-        playerAnimator = GameObject.Find("Player Body").GetComponent<Animator>();
-        enemyAnimator = GameObject.Find("Enemy Body").GetComponent<Animator>();
+        playerAnimator = GameObject.Find("Player Body 1 1").GetComponent<Animator>();
+        enemyAnimator = GameObject.Find("Enemy Body 1 1").GetComponent<Animator>();
         if (playerAnimator == null || enemyAnimator == null)
         {
             Debug.LogError("Animator references not set in StateManager");
             return;
         }
-        TransitionToState(new PlayerAttackState(playerAnimator, enemyAnimator));
+        //TransitionToState(new PlayerAttackState(playerAnimator, enemyAnimator));
     }
 
     public void TransitionToState(GameState newState)

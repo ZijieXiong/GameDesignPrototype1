@@ -26,7 +26,6 @@ public class GameManager : MonoBehaviour
     public GameObject heartPrefab;
 
     // Reference to the player object in the game.
-    public Player player;
     // GameObject to hold all signal objects.
     public GameObject signals;
 
@@ -35,8 +34,11 @@ public class GameManager : MonoBehaviour
     //Gameobjects to hold UI elements
     public GameObject startText;
     public GameObject failText;
-
+    public StateManager stateManager;
     public Canvas canvas;
+
+    public Animator playerAnimator;
+    public Animator enemyAnimator;
 
     public float acceptableDistance = 0.5f;
 
@@ -91,7 +93,7 @@ public class GameManager : MonoBehaviour
                     TimingDetection();
 
                     // Send the current signal to the StateManager
-                    stateManager.HandleSignal(currentSignal); // Add this line
+                    //stateManager.HandleSignal(currentSignal); // Add this line
                 }
                 
                 //Check if player loss all health
@@ -231,6 +233,7 @@ public class GameManager : MonoBehaviour
                 if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) < acceptableDistance)
                 {
                     Debug.Log("Block Success");
+                    playerAnimator.SetBool("isSingle", true);
                 }
                 else
                 {
@@ -252,7 +255,6 @@ public class GameManager : MonoBehaviour
                     if(currentSignal < serie.Length){
                         ChangeFrameShape(serie[currentSignal]);
                     }
-                    player.ChangeState(Player.State.BlockFail);
                 }
             }
         }
@@ -377,7 +379,6 @@ public class GameManager : MonoBehaviour
             case State.Idle:
                 break;
             case State.Blocking:
-                player.ChangeState(Player.State.Blocking);
                 serie = GenerateSerie(3);
                 currentSignal = 0;
                 playerHealth = 3;
