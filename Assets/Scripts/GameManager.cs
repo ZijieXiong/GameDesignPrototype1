@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour
     private float cameraWidth;
     private int currentSignal = 0;
     private int currentHit = 0;
+    private bool isHoldingSpace = false;
     // Start is called before the first frame update
     void Start()
     {   
@@ -82,15 +83,11 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case State.Blocking:
-                for(int i = 0; i < signalObjects.Count; i++){
-                    if(signalObjects[i].transform.position.x < -cameraWidth - 2){
-                        Destroy(signalObjects[i]);
-                        signalObjects.RemoveAt(i);
-                    }
-                }
-
                 //Check the timing of user input
-                TimingDetection();
+                if(currentSignal < serie.Length)
+                {
+                    TimingDetection();
+                }
                 
                 //Check if player loss all health
                 if(playerHealth == 0){
@@ -212,7 +209,8 @@ public class GameManager : MonoBehaviour
     }
 
     public void ChangeFrameShape(int shapeIndex)
-    {
+    {   
+        Debug.Log("change shape");
         if (shapeIndex >= 0 && shapeIndex < frameShapes.Length)
         {
             frame.GetComponent<SpriteRenderer>().sprite = frameShapes[shapeIndex];
@@ -224,18 +222,17 @@ public class GameManager : MonoBehaviour
     {
         if(serie[currentSignal] == 0){
             if (Input.GetKeyDown(KeyCode.Space))
-            {
+            {   
+                Debug.Log("pattern 0");
                 if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) < acceptableDistance)
                 {
                     Debug.Log("Block Success");
-                    player.ChangeState(Player.State.BlockSuccess);
                 }
                 else
                 {
                     Debug.Log(signalObjects[currentSignal]);
                     playerHealth-=1;
-                    UpdateHealthUI();
-                    player.ChangeState(Player.State.BlockFail);                        
+                    UpdateHealthUI();                     
                 }
                 currentSignal += 1;
                 if(currentSignal < serie.Length){
@@ -256,46 +253,73 @@ public class GameManager : MonoBehaviour
             }
         }
         else if(serie[currentSignal] == 1)
-        {
-            if(Input.GetKey(KeyCode.Space))
-            {
-                if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) > acceptableDistance + frame.GetComponent<SpriteRenderer>().sprite.rect.width/2)
+        {   
+            if(Input.GetKeyDown(KeyCode.Space)){
+                isHoldingSpace = true;
+                if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) > acceptableDistance * 2 + frameShapes[1].bounds.size.x/2)
                 {
                     Debug.Log("Block Fail");
+                    Debug.Log("wrong timing in pressing");
                     Debug.Log(signalObjects[currentSignal]);
                     playerHealth-=1;
                     UpdateHealthUI();
+                    currentSignal += 1;
+                    if(currentSignal < serie.Length){
+                        ChangeFrameShape(serie[currentSignal]);
+                    }
+                    isHoldingSpace = false;
+                }
+            }
+            if(Input.GetKeyUp(KeyCode.Space) & isHoldingSpace){
+                Debug.Log(Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position));
+                Debug.Log(acceptableDistance * 2 + frameShapes[1].bounds.size.x/2);
+                if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) > acceptableDistance * 2 + frameShapes[1].bounds.size.x/2)
+                {
+                    Debug.Log("Block Fail");
+                    Debug.Log("wrong timing in releasing");
+                    Debug.Log(signalObjects[currentSignal]);
+                    playerHealth-=1;
+                    UpdateHealthUI();
+                    currentSignal += 1;
+                    if(currentSignal < serie.Length){
+                        ChangeFrameShape(serie[currentSignal]);
+                    }
+                    isHoldingSpace = false;
+                }
+                else
+                {
+                    Debug.Log("Block Success");
+                    Debug.Log(signalObjects[currentSignal]);
                     currentSignal += 1;
                     if(currentSignal < serie.Length){
                         ChangeFrameShape(serie[currentSignal]);
                     }
                 }
             }
-            else
-            {
-                if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) <=frame.GetComponent<SpriteRenderer>().sprite.rect.width/2 - acceptableDistance)
-                {
-                    Debug.Log("Block Fail");
-                    Debug.Log(signalObjects[currentSignal]);
-                    playerHealth-=1;
-                    UpdateHealthUI();
-                    currentSignal += 1;
-                    if(currentSignal < serie.Length){
-                        ChangeFrameShape(serie[currentSignal]);
-                    }
+            if(frame.transform.position.x - signalObjects[currentSignal].transform.position.x > acceptableDistance * 2 + frameShapes[1].bounds.size.x/2 & !isHoldingSpace)
+            {   
+                Debug.Log("Block Fail");
+                Debug.Log("Miss the block");
+                Debug.Log(signalObjects[currentSignal]);
+                playerHealth-=1;
+                UpdateHealthUI();
+                currentSignal += 1;
+                if(currentSignal < serie.Length){
+                    ChangeFrameShape(serie[currentSignal]);
                 }
+                isHoldingSpace = false;
             }
         }
         else if(serie[currentSignal] == 2)
         {
             if(Input.GetKeyDown(KeyCode.Space))
             {
-                if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) > acceptableDistance + frame.GetComponent<SpriteRenderer>().sprite.rect.width/2)
+                Debug.Log("pattern 2");
+                if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) <= acceptableDistance * 2 + frameShapes[1].bounds.size.x/2)
                 {   
-                    if(currentHit < 2){
-                        currentHit += 1;
-                    }
-                    else if(currentHit >= 2){
+                    currentHit += 1;
+                    if(currentHit >= 2){
+                        Debug.Log("make twice hit");
                         Debug.Log("Block Success");
                         Debug.Log(signalObjects[currentSignal]);
                         currentSignal += 1;
@@ -319,7 +343,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {   
-                if(frame.transform.position.x - signalObjects[currentSignal].transform.position.x > acceptableDistance + frame.GetComponent<SpriteRenderer>().sprite.rect.width/2){
+                if(frame.transform.position.x - signalObjects[currentSignal].transform.position.x > acceptableDistance * 2 + frameShapes[1].bounds.size.x/2){
                     playerHealth-=1;
                     UpdateHealthUI();
                     currentHit = 0;
@@ -362,7 +386,7 @@ public class GameManager : MonoBehaviour
                 for (int i = 0; i < serie.Length; i++)
                 {
                     Debug.Log(serie[i]);
-                    InitSignal(serie[i], new Vector3(cameraWidth / 2 + 4 * (i) + 1,2.8f,0));
+                    InitSignal(serie[i], new Vector3(cameraWidth / 2 + 10 * (i) + 1,2.8f,0));
                 }
                 UpdateHealthUI();
                 ChangeFrameShape(serie[0]);
