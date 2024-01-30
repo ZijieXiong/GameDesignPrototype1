@@ -233,10 +233,14 @@ public class GameManager : MonoBehaviour
                 if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) < acceptableDistance)
                 {
                     Debug.Log("Block Success");
-                    playerAnimator.SetBool("isSingle", true);
+                    playerAnimator.SetBool("Player Clash Single", true);
+                    playerAnimator.SetBool("Player Attack", true);
                 }
                 else
                 {
+                    Debug.Log("Block Fail");
+                    playerAnimator.SetBool("Player Clash Single", true);
+                    playerAnimator.SetBool("Player Hurt", true);
                     Debug.Log(signalObjects[currentSignal]);
                     playerHealth-=1;
                     UpdateHealthUI();                     
@@ -249,6 +253,9 @@ public class GameManager : MonoBehaviour
             else{
                 //Check if player miss one signal
                 if(frame.transform.position.x - signalObjects[currentSignal].transform.position.x > acceptableDistance * 2){
+                    Debug.Log("Block Fail");
+                    playerAnimator.SetBool("Player Clash Single", true);
+                    playerAnimator.SetBool("Player Hurt", true);
                     playerHealth-=1;
                     UpdateHealthUI();
                     currentSignal += 1;
@@ -267,6 +274,8 @@ public class GameManager : MonoBehaviour
                     Debug.Log("Block Fail");
                     Debug.Log("wrong timing in pressing");
                     Debug.Log(signalObjects[currentSignal]);
+                    playerAnimator.SetBool("Player Hold", true);
+                    playerAnimator.SetBool("Player Hurt", true);
                     playerHealth-=1;
                     UpdateHealthUI();
                     currentSignal += 1;
@@ -276,7 +285,7 @@ public class GameManager : MonoBehaviour
                     isHoldingSpace = false;
                 }
             }
-            if(Input.GetKeyUp(KeyCode.Space) & isHoldingSpace){
+            else if(Input.GetKeyUp(KeyCode.Space) & isHoldingSpace){
                 Debug.Log(Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position));
                 Debug.Log(acceptableDistance * 2 + frameShapes[1].bounds.size.x/2);
                 if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) > acceptableDistance * 2 + frameShapes[1].bounds.size.x/2)
@@ -284,6 +293,8 @@ public class GameManager : MonoBehaviour
                     Debug.Log("Block Fail");
                     Debug.Log("wrong timing in releasing");
                     Debug.Log(signalObjects[currentSignal]);
+                    playerAnimator.SetBool("Player Hold", true);
+                    playerAnimator.SetBool("Player Hurt", true);
                     playerHealth-=1;
                     UpdateHealthUI();
                     currentSignal += 1;
@@ -296,17 +307,21 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log("Block Success");
                     Debug.Log(signalObjects[currentSignal]);
+                    playerAnimator.SetBool("Player Hold", true);
+                    playerAnimator.SetBool("Player Attack", true);
                     currentSignal += 1;
                     if(currentSignal < serie.Length){
                         ChangeFrameShape(serie[currentSignal]);
                     }
                 }
             }
-            if(frame.transform.position.x - signalObjects[currentSignal].transform.position.x > acceptableDistance * 2 + frameShapes[1].bounds.size.x/2 & !isHoldingSpace)
+            else if(frame.transform.position.x - signalObjects[currentSignal].transform.position.x > acceptableDistance * 2 + frameShapes[1].bounds.size.x/2 & !isHoldingSpace)
             {   
                 Debug.Log("Block Fail");
                 Debug.Log("Miss the block");
                 Debug.Log(signalObjects[currentSignal]);
+                playerAnimator.SetBool("Player Hold", true);
+                playerAnimator.SetBool("Player Hurt", true);
                 playerHealth-=1;
                 UpdateHealthUI();
                 currentSignal += 1;
@@ -328,6 +343,8 @@ public class GameManager : MonoBehaviour
                         Debug.Log("make twice hit");
                         Debug.Log("Block Success");
                         Debug.Log(signalObjects[currentSignal]);
+                        playerAnimator.SetBool("Player Double", true);
+                        playerAnimator.SetBool("Player Attack", true);
                         currentSignal += 1;
                         if(currentSignal < serie.Length){
                             ChangeFrameShape(serie[currentSignal]);
@@ -335,9 +352,12 @@ public class GameManager : MonoBehaviour
                     }
                 }
                 else
-                {
+                {   
                     Debug.Log("Block Fail");
+                    Debug.Log("Miss the block");
                     Debug.Log(signalObjects[currentSignal]);
+                    playerAnimator.SetBool("Player Double", true);
+                    playerAnimator.SetBool("Player Hurt", true);
                     playerHealth-=1;
                     UpdateHealthUI();
                     currentHit = 0;
@@ -350,6 +370,10 @@ public class GameManager : MonoBehaviour
             else
             {   
                 if(frame.transform.position.x - signalObjects[currentSignal].transform.position.x > acceptableDistance * 2 + frameShapes[1].bounds.size.x/2){
+                    Debug.Log("Block Fail");
+                    Debug.Log(signalObjects[currentSignal]);
+                    playerAnimator.SetBool("Player Double", true);
+                    playerAnimator.SetBool("Player Hurt", true);
                     playerHealth-=1;
                     UpdateHealthUI();
                     currentHit = 0;
