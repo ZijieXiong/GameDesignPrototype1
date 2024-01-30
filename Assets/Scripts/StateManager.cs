@@ -39,16 +39,30 @@ public class StateManager : MonoBehaviour
 
     public void ReceiveSignal(string signal)
     {
+        ClashState clashState;
+
         switch (signal)
         {
+            case "0":
+                clashState = new ClashState(playerAnimator, enemyAnimator);
+                TransitionToState(clashState);
+                clashState.HandleClashSignal("Single");
+                break;
+            case "1":
+                clashState = new ClashState(playerAnimator, enemyAnimator);
+                TransitionToState(clashState);
+                clashState.HandleClashSignal("Hold");
+                break;
+            case "2":
+                clashState = new ClashState(playerAnimator, enemyAnimator);
+                TransitionToState(clashState);
+                clashState.HandleClashSignal("Double");
+                break;
             case "playerAttack":
                 TransitionToState(new PlayerAttackState(playerAnimator, enemyAnimator));
                 break;
             case "enemyAttack":
                 TransitionToState(new EnemyAttackState(playerAnimator, enemyAnimator));
-                break;
-            case "clash":
-                TransitionToState(new ClashState(playerAnimator, enemyAnimator));
                 break;
             default:
                 Debug.LogError("Unknown signal received");

@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
         Loading,
         Failing
     }
+
     // Prefabs for object instantiation.
     public GameObject circlePrefab;
     public GameObject squarePrefab;
@@ -59,6 +60,7 @@ public class GameManager : MonoBehaviour
     private int currentSignal = 0;
     private int currentHit = 0;
     private bool isHoldingSpace = false;
+
     // Start is called before the first frame update
     void Start()
     {   
@@ -87,6 +89,9 @@ public class GameManager : MonoBehaviour
                 if(currentSignal < serie.Length)
                 {
                     TimingDetection();
+
+                    // Send the current signal to the StateManager
+                    stateManager.HandleSignal(currentSignal); // Add this line
                 }
                 
                 //Check if player loss all health
@@ -176,7 +181,6 @@ public class GameManager : MonoBehaviour
             rect.anchoredPosition = new Vector2(-330 + (rect.sizeDelta.x /2 * i), 200);
         }
     }
-
 
     // Calculates the bounds of the camera view in world space.
     // Useful for positioning objects within the camera's view.
@@ -354,8 +358,6 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-
-
     }
 
     public int GetCurrentSerie()
