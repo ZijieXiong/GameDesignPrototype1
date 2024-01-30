@@ -152,6 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8305d3a5a2a0644afaa55406fa984e91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerAnimator: {fileID: 0}
+  enemyAnimator: {fileID: 0}
 --- !u!4 &100073767
 Transform:
   m_ObjectHideFlags: 0
@@ -792,11 +794,15 @@ MonoBehaviour:
   - {fileID: 7482667652216324306, guid: e8ed7f8520433476aabed66784ece1f8, type: 3}
   startText: {fileID: 1095331109}
   failText: {fileID: 880871737}
-  stateManager: {fileID: 100073766}
   canvas: {fileID: 754222706}
   playerAnimator: {fileID: 889569957}
-  enemyAnimator: {fileID: 0}
+  enemyAnimator: {fileID: 1704546457}
   acceptableDistance: 0.2
+--- !u!95 &1704546457 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3195939069806420437, guid: b8834858366474711b5a39e2b93c9fe7, type: 3}
+  m_PrefabInstance: {fileID: 2022622275}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1770140062
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -870,6 +876,10 @@ PrefabInstance:
     - target: {fileID: 2200607749813820904, guid: b8834858366474711b5a39e2b93c9fe7, type: 3}
       propertyPath: m_Name
       value: Enemy Body 1 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3195939069806420437, guid: b8834858366474711b5a39e2b93c9fe7, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3389741653783694681, guid: b8834858366474711b5a39e2b93c9fe7, type: 3}
       propertyPath: m_LocalPosition.x
