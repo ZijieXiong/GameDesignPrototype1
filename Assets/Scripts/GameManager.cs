@@ -87,39 +87,10 @@ public class GameManager : MonoBehaviour
                         signalObjects.RemoveAt(i);
                     }
                 }
-                //Player input timing detection
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) < acceptableDistance)
-                    {
-                        Debug.Log("Block Success");
-                        player.ChangeState(Player.State.BlockSuccess);
-                    }
-                    else
-                    {
-                        Debug.Log(signalObjects[currentSignal]);
-                        playerHealth-=1;
-                        UpdateHealthUI();
-                        player.ChangeState(Player.State.BlockFail);                        
-                    }
-                    currentSignal += 1;
-                    if(currentSignal < serie.Length){
-                        ChangeFrameShape(serie[currentSignal]);
-                    }
-                }
-                else{
-                    //Check if player miss one signal
-                    if(frame.transform.position.x - signalObjects[currentSignal].transform.position.x > acceptableDistance * 2){
-                        playerHealth-=1;
-                        UpdateHealthUI();
-                        currentSignal += 1;
-                        if(currentSignal < serie.Length){
-                            ChangeFrameShape(serie[currentSignal]);
-                        }
-                        player.ChangeState(Player.State.BlockFail);
-                    }
-                }
 
+                //Check the timing of user input
+                TimingDetection();
+                
                 //Check if player loss all health
                 if(playerHealth == 0){
                     ChangeState(State.Failing);
@@ -213,7 +184,7 @@ public class GameManager : MonoBehaviour
     // Useful for positioning objects within the camera's view.
      void CalculateCameraBounds()
     {
-        Camera cam = Camera.main; // 获取主摄像机
+        Camera cam = Camera.main;
         if (cam == null) 
         {
             Debug.LogError("Main Camera is not assigned.");
@@ -245,6 +216,64 @@ public class GameManager : MonoBehaviour
         {
             frame.GetComponent<SpriteRenderer>().sprite = frameShapes[shapeIndex];
         }
+    }
+
+    //Player input timing detection
+    private void TimingDetection()
+    {
+        if(serie[currentSignal] == 0){
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position) < acceptableDistance)
+                {
+                    Debug.Log("Block Success");
+                    player.ChangeState(Player.State.BlockSuccess);
+                }
+                else
+                {
+                    Debug.Log(signalObjects[currentSignal]);
+                    playerHealth-=1;
+                    UpdateHealthUI();
+                    player.ChangeState(Player.State.BlockFail);                        
+                }
+                currentSignal += 1;
+                if(currentSignal < serie.Length){
+                    ChangeFrameShape(serie[currentSignal]);
+                }
+            }
+            else{
+                //Check if player miss one signal
+                if(frame.transform.position.x - signalObjects[currentSignal].transform.position.x > acceptableDistance * 2){
+                    playerHealth-=1;
+                    UpdateHealthUI();
+                    currentSignal += 1;
+                    if(currentSignal < serie.Length){
+                        ChangeFrameShape(serie[currentSignal]);
+                    }
+                    player.ChangeState(Player.State.BlockFail);
+                }
+            }
+        }
+        else if(serie[currentSignal] == 1)
+        {
+            if(Input.GetKey(KeyCode.Space))
+            {
+                /*if (Vector3.Distance(signalObjects[currentSignal].transform.position, frame.transform.position)  > acceptableDistance + frame.GetComponent<SpriteRenderer>().)
+                {
+                    Debug.Log("Block Fail");
+                }*/
+            }
+            else
+            {
+
+            }
+        }
+        else if(serie[currentSignal] == 2)
+        {
+
+        }
+
+
     }
 
     // Changes the current state of the game.
