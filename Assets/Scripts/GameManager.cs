@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
     //Gameobjects to hold UI elements
     public GameObject startText;
     public GameObject failText;
+    public GameObject instructionText;
+    public ScoreboardManager scoreboardManager;
     public Canvas canvas;
 
     public Animator playerAnimator;
@@ -74,6 +76,7 @@ public class GameManager : MonoBehaviour
         startText.SetActive(true);
         ChangeState(State.Idle);
         failText.SetActive(false);
+        instructionText.SetActive(true);
         UpdateHealthUI();
         frame.SetActive(false);
     }
@@ -93,6 +96,7 @@ public class GameManager : MonoBehaviour
                     ChangeState(State.Blocking);
                     startText.SetActive(false);
                     frame.SetActive(true);
+                    instructionText.SetActive(false);
                     enemyAnimator.SetBool("Restart Bool", true);
                 }
                 break;
@@ -131,6 +135,7 @@ public class GameManager : MonoBehaviour
                 if (Input.GetKeyUp(KeyCode.Space))
                 {
                     failText.SetActive(false);
+                    scoreboardManager.ResetScore();
                     playerHealth = 3;
                     ChangeState(State.Blocking);
 
@@ -474,6 +479,7 @@ public class GameManager : MonoBehaviour
     {
         //enemyAnimator.gameObject.SetActive(false);
         ChangeState(State.Idle);
+        scoreboardManager.AddScore(1);
     }
 
     private void HandlePlayerExitState()
