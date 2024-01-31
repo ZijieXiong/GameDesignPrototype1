@@ -49,6 +49,8 @@ public class GameManager : MonoBehaviour
     // Variable to track the current state of the game.
     private State currentState;
 
+    private bool playerAnimationFinished = false;
+
     private int playerHealth = 3;
     private int enemyHealth = 1;
     // Variables for calculating and storing camera bounds.
@@ -61,6 +63,10 @@ public class GameManager : MonoBehaviour
     private int currentSignal = 0;
     private int currentHit = 0;
     private bool isHoldingSpace = false;
+    private bool startingAnimation = false;
+
+    private float enemyInitX = 2.221135f;
+    private float playerInitX = -2.837095f;
 
     // Start is called before the first frame update
     void Start()
@@ -75,6 +81,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
+        if(startingAnimation = true & playerAnimationFinished)
+        {
+            startingAnimation = false;
+        }
         switch (currentState)
         {
             case State.Idle:
@@ -88,17 +98,14 @@ public class GameManager : MonoBehaviour
                 break;
             case State.Blocking:
                 //Check the timing of user input
-                if(currentSignal < serie.Length & playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Player Idle") & enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("idle"))
+                if(currentSignal < serie.Length & playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Player Idle") & enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("idle") & !startingAnimation)
                 {
                     TimingDetection();
-
-                    // Send the current signal to the StateManager
-                    //stateManager.HandleSignal(currentSignal); // Add this line
                 }
                 
                 //Check if player loss all health
                 if(playerHealth == 0){
-                    ChangeState(State.Failing);
+                    ChangeState(State.Loading);
                 }
                 else{
                     //Check if player block all attacks
@@ -115,13 +122,18 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case State.Loading:
+                if(playerAnimationFinished)
+                {
+                    ChangeState(State.Failing);
+                }
                 break;
             case State.Failing:
                 if (Input.GetKeyUp(KeyCode.Space))
                 {
                     failText.SetActive(false);
-                    ChangeState(State.Blocking);
                     playerHealth = 3;
+                    ChangeState(State.Blocking);
+
                 }
                 break;
 
@@ -137,6 +149,7 @@ public class GameManager : MonoBehaviour
                 }*/
                 break;
         }
+        playerAnimationFinished = false;
     }
 
     // Generates an array of integers representing a random series of shapes.
@@ -265,14 +278,16 @@ public class GameManager : MonoBehaviour
                     enemyAnimator.SetBool("Attack Bool", true);
                     Debug.Log(signalObjects[currentSignal]);
                     playerHealth-=1;
-                    UpdateHealthUI();                     
+                    UpdateHealthUI();
+                    
                 }
+                startingAnimation = true;
                 currentSignal += 1;
                 if(currentSignal < serie.Length){
                     ChangeFrameShape(serie[currentSignal]);
                 }
             }
-            if(currentSignal < serie.Length)
+            else if(currentSignal < serie.Length)
             {
                 if(frame.transform.position.x - signalObjects[currentSignal].transform.position.x > acceptableDistance){
                     Debug.Log("Block Fail");
@@ -282,6 +297,7 @@ public class GameManager : MonoBehaviour
                     enemyAnimator.SetBool("Attack Bool", true);
                     playerHealth-=1;
                     UpdateHealthUI();
+                    startingAnimation = true;
                     currentSignal += 1;
                     if(currentSignal < serie.Length){
                         ChangeFrameShape(serie[currentSignal]);
@@ -306,6 +322,7 @@ public class GameManager : MonoBehaviour
                     enemyAnimator.SetBool("Attack Bool", true);
                     playerHealth-=1;
                     UpdateHealthUI();
+                    startingAnimation = true;
                     currentSignal += 1;
                     if(currentSignal < serie.Length){
                         ChangeFrameShape(serie[currentSignal]);
@@ -327,6 +344,7 @@ public class GameManager : MonoBehaviour
                     enemyAnimator.SetBool("Attack Bool", true);
                     playerHealth-=1;
                     UpdateHealthUI();
+                    startingAnimation = true;
                     currentSignal += 1;
                     if(currentSignal < serie.Length){
                         ChangeFrameShape(serie[currentSignal]);
@@ -341,6 +359,7 @@ public class GameManager : MonoBehaviour
                     playerAnimator.SetBool("Player Attack", true);
                     enemyAnimator.SetBool("Hold Bool", true);
                     enemyAnimator.SetBool("Hurt Bool", true);
+                    startingAnimation = true;
                     currentSignal += 1;
                     isHoldingSpace = false;
                     if(currentSignal < serie.Length){
@@ -359,6 +378,7 @@ public class GameManager : MonoBehaviour
                 enemyAnimator.SetBool("Attack Bool", true);
                 playerHealth-=1;
                 UpdateHealthUI();
+                startingAnimation = true;
                 currentSignal += 1;
                 if(currentSignal < serie.Length){
                     ChangeFrameShape(serie[currentSignal]);
@@ -382,6 +402,8 @@ public class GameManager : MonoBehaviour
                         playerAnimator.SetBool("Player Attack", true);
                         enemyAnimator.SetBool("Double Bool", true);
                         enemyAnimator.SetBool("Hurt Bool", true);
+                        startingAnimation = true;
+                        currentHit = 0;
                         currentSignal += 1;
                         if(currentSignal < serie.Length){
                             ChangeFrameShape(serie[currentSignal]);
@@ -400,6 +422,7 @@ public class GameManager : MonoBehaviour
                     playerHealth-=1;
                     UpdateHealthUI();
                     currentHit = 0;
+                    startingAnimation = true;
                     currentSignal += 1;
                     if(currentSignal < serie.Length){
                         ChangeFrameShape(serie[currentSignal]);
@@ -418,6 +441,7 @@ public class GameManager : MonoBehaviour
                     playerHealth-=1;
                     UpdateHealthUI();
                     currentHit = 0;
+                    startingAnimation = true;
                     currentSignal += 1;
                     if(currentSignal < serie.Length){
                         ChangeFrameShape(serie[currentSignal]);
@@ -435,17 +459,26 @@ public class GameManager : MonoBehaviour
     void OnEnable()
     {
         EnemyDeadController.onStateEnterEvent += HandleExitState;
+        PlayerAttackController.onStateExitEvent += HandlePlayerExitState;
+        PlayerHurtController.onStateExitEvent += HandlePlayerExitState;
     }
 
     void Disable()
     {
         EnemyDeadController.onStateEnterEvent -= HandleExitState;
+        PlayerAttackController.onStateExitEvent -= HandlePlayerExitState;
+        PlayerHurtController.onStateExitEvent -= HandlePlayerExitState;
     }
 
     private void HandleExitState()
     {
         //enemyAnimator.gameObject.SetActive(false);
         ChangeState(State.Idle);
+    }
+
+    private void HandlePlayerExitState()
+    {
+        playerAnimationFinished = true;
     }
 
 
@@ -459,9 +492,21 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case State.Idle:
+                numOfSignal = signalObjects.Count;
+                for(int i = 0; i < numOfSignal; i++){
+                    Debug.Log("Destroying");
+                    Destroy(signalObjects[0]);
+                    signalObjects.RemoveAt(0);
+                }
                 startText.SetActive(true);
                 break;
             case State.Blocking:
+                Vector3 enemyPosition = enemyAnimator.gameObject.transform.position;
+                enemyPosition[0] = enemyInitX;
+                enemyAnimator.gameObject.transform.position = enemyPosition;
+                Vector3 playerPosition = playerAnimator.gameObject.transform.position;
+                playerPosition[0] = playerInitX;
+                playerAnimator.gameObject.transform.position = playerPosition;
                 enemyAnimator.gameObject.SetActive(true);
                 enemyHealth = 1;
                 serie = GenerateSerie(3);
@@ -483,7 +528,6 @@ public class GameManager : MonoBehaviour
                 }
                 UpdateHealthUI();
                 ChangeFrameShape(serie[0]);
-
                 break;
             case State.Attacking:
                 break;
