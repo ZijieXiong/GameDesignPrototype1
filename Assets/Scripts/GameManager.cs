@@ -8,15 +8,15 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
-{   
-    // Enumeration defining possible game states.
+{
     public enum State
     {
         Idle,
         Blocking,
         Attacking,
         Loading,
-        Failing
+        Failing,
+        EnemyDead
     }
 
     // Prefabs for object instantiation.
@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
     private State currentState;
 
     private int playerHealth = 3;
-
+    private int enemyHealth = 1;
     // Variables for calculating and storing camera bounds.
     private Vector2 cameraTopLeft;
     private Vector2 cameraTopRight;
@@ -107,6 +107,10 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case State.Attacking:
+                if (enemyHealth == 0) 
+                {
+                    ChangeState(State.EnemyDead);
+                }
                 break;
             case State.Loading:
                 break;
@@ -115,6 +119,16 @@ public class GameManager : MonoBehaviour
                 {
                     failText.SetActive(false);
                     ChangeState(State.Blocking);
+                }
+                break;
+
+                    case State.EnemyDead:
+                if (!enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("EnemyDeathAnimation")) 
+                {
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        ChangeState(State.Idle);
+                    }
                 }
                 break;
         }
@@ -450,6 +464,10 @@ public class GameManager : MonoBehaviour
                     signalObjects.RemoveAt(0);
                 }
                 failText.SetActive(true);
+                break;
+            
+            case State.EnemyDead:
+                enemyAnimator.SetTrigger("EnemyDead"); 
                 break;
         }
     }
