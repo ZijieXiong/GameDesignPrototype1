@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     public Animator playerAnimator;
     public Animator enemyAnimator;
 
-    public float acceptableDistance = 0.5f;
+    public float acceptableDistance = 1f;
 
     // Array for storing a series of shape indices.
     private int[] serie;
@@ -121,6 +121,7 @@ public class GameManager : MonoBehaviour
                 {
                     failText.SetActive(false);
                     ChangeState(State.Blocking);
+                    playerHealth = 3;
                 }
                 break;
 
@@ -462,7 +463,6 @@ public class GameManager : MonoBehaviour
                 enemyHealth = 1;
                 serie = GenerateSerie(3);
                 currentSignal = 0;
-                playerHealth = 3;
                 Debug.Log("Attacking Serie");
                 numOfSignal = signalObjects.Count;
                 for(int i = 0; i < numOfSignal; i++){

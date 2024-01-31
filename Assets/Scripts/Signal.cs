@@ -19,6 +19,6 @@ public class Signal : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(new Vector3(-5,0,0) * Time.deltaTime);
+        transform.Translate(new Vector3(-3,0,0) * Time.deltaTime);
     }
 }
