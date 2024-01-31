@@ -152,8 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8305d3a5a2a0644afaa55406fa984e91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAnimator: {fileID: 0}
-  enemyAnimator: {fileID: 0}
 --- !u!4 &100073767
 Transform:
   m_ObjectHideFlags: 0
@@ -789,9 +787,9 @@ MonoBehaviour:
   signals: {fileID: 1576801084}
   frame: {fileID: 3983969288619010848}
   frameShapes:
-  - {fileID: -2413806693520163455, guid: 31a9e2176bc634c699dadb854cf29892, type: 3}
-  - {fileID: 7482667652216324306, guid: 69970c5007b654c7fa0de4ef60f347b5, type: 3}
-  - {fileID: 7482667652216324306, guid: e8ed7f8520433476aabed66784ece1f8, type: 3}
+  - {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
+  - {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+  - {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
   startText: {fileID: 1095331109}
   failText: {fileID: 880871737}
   canvas: {fileID: 754222706}
