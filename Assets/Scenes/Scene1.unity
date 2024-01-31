@@ -854,6 +854,10 @@ PrefabInstance:
       value: Player Body 1 1
       objectReference: {fileID: 0}
     - target: {fileID: 7549528263964043207, guid: a6ac3e7acd34e48c18d0beabde76290a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7549528263964043207, guid: a6ac3e7acd34e48c18d0beabde76290a, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 1
       objectReference: {fileID: 0}
