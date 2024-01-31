@@ -272,9 +272,9 @@ public class GameManager : MonoBehaviour
                     ChangeFrameShape(serie[currentSignal]);
                 }
             }
-            else{
-                //Check if player miss one signal
-                if(frame.transform.position.x - signalObjects[currentSignal].transform.position.x > acceptableDistance * 2){
+            if(currentSignal < serie.Length)
+            {
+                if(frame.transform.position.x - signalObjects[currentSignal].transform.position.x > acceptableDistance){
                     Debug.Log("Block Fail");
                     playerAnimator.SetBool("Player Clash Single", true);
                     playerAnimator.SetBool("Player Hurt", true);
@@ -288,6 +288,8 @@ public class GameManager : MonoBehaviour
                     }
                 }
             }
+            //Check if player miss one signal
+
         }
         else if(serie[currentSignal] == 1)
         {   
@@ -340,6 +342,7 @@ public class GameManager : MonoBehaviour
                     enemyAnimator.SetBool("Hold Bool", true);
                     enemyAnimator.SetBool("Hurt Bool", true);
                     currentSignal += 1;
+                    isHoldingSpace = false;
                     if(currentSignal < serie.Length){
                         ChangeFrameShape(serie[currentSignal]);
                     }
