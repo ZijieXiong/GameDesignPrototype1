@@ -83,11 +83,12 @@ public class GameManager : MonoBehaviour
                     ChangeState(State.Blocking);
                     startText.SetActive(false);
                     frame.SetActive(true);
+                    enemyAnimator.SetBool("Restart Bool", true);
                 }
                 break;
             case State.Blocking:
                 //Check the timing of user input
-                if(currentSignal < serie.Length)
+                if(currentSignal < serie.Length & playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Player Idle") & enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("idle"))
                 {
                     TimingDetection();
 
@@ -103,6 +104,7 @@ public class GameManager : MonoBehaviour
                     //Check if player block all attacks
                     if(currentSignal >= serie.Length){
                         ChangeState(State.Attacking);
+                        enemyHealth = 0;
                     }
                 }
                 break;
@@ -122,14 +124,16 @@ public class GameManager : MonoBehaviour
                 }
                 break;
 
-                    case State.EnemyDead:
-                if (!enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("EnemyDeathAnimation")) 
+            case State.EnemyDead:
+            /*
+                if (enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("exit")) 
                 {
+                    enemyAnimator.gameObject.SetActive(false);
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
                         ChangeState(State.Idle);
                     }
-                }
+                }*/
                 break;
         }
     }
@@ -424,22 +428,48 @@ public class GameManager : MonoBehaviour
         return serie[currentSignal];
     }
 
+    void OnEnable()
+    {
+        EnemyDeadController.onStateEnterEvent += HandleExitState;
+    }
+
+    void Disable()
+    {
+        EnemyDeadController.onStateEnterEvent -= HandleExitState;
+    }
+
+    private void HandleExitState()
+    {
+        //enemyAnimator.gameObject.SetActive(false);
+        ChangeState(State.Idle);
+    }
+
+
     // Changes the current state of the game.
     // Handles actions to be taken during state transitions, like generating attack series or setting up game objects.
     private void ChangeState(State newState)
     {
         currentState = newState;
         Debug.Log(currentState);
-
+        int numOfSignal;
         switch (newState)
         {
             case State.Idle:
+                startText.SetActive(true);
                 break;
             case State.Blocking:
+                enemyAnimator.gameObject.SetActive(true);
+                enemyHealth = 1;
                 serie = GenerateSerie(3);
                 currentSignal = 0;
                 playerHealth = 3;
                 Debug.Log("Attacking Serie");
+                numOfSignal = signalObjects.Count;
+                for(int i = 0; i < numOfSignal; i++){
+                    Debug.Log("Destroying");
+                    Destroy(signalObjects[0]);
+                    signalObjects.RemoveAt(0);
+                }
                 signalObjects = new List<GameObject>();
                 //signals = new GameObject("Signals");
                 CalculateCameraBounds();
@@ -457,7 +487,7 @@ public class GameManager : MonoBehaviour
             case State.Loading:
                 break;
             case State.Failing:
-                int numOfSignal = signalObjects.Count;
+                numOfSignal = signalObjects.Count;
                 for(int i = 0; i < numOfSignal; i++){
                     Debug.Log("Destroying");
                     Destroy(signalObjects[0]);
@@ -467,7 +497,7 @@ public class GameManager : MonoBehaviour
                 break;
             
             case State.EnemyDead:
-                enemyAnimator.SetTrigger("EnemyDead"); 
+                enemyAnimator.SetBool("Dead Bool", true); 
                 break;
         }
     }
